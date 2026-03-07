@@ -1,0 +1,20 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 10
+
+image:
+  repository: nginx
+  tag: "1.27.4"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+
+rollout:
+  steps:
+    - setWeight: 10
+    - pause: {}
+    - setWeight: 50
+    - pause: {}
+    - setWeight: 100
