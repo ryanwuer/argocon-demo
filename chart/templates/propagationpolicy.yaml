@@ -6,9 +6,11 @@ metadata:
     {{- include "argocon-demo.labels" . | nindent 4 }}
 spec:
   resourceSelectors:
-    - apiVersion: argoproj.io/v1alpha1
-      kind: Rollout
-      name: {{ include "argocon-demo.fullname" . }}
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: argocon-demo
   placement:
     clusterAffinity:
       clusterNames:
