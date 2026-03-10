@@ -1,0 +1,28 @@
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ include "argocon-demo.fullname" . }}
+  labels:
+    {{- include "argocon-demo.labels" . | nindent 4 }}
+spec:
+  resourceSelectors:
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Rollout
+      name: {{ include "argocon-demo.fullname" . }}
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.karmada.clusters }}
+        - {{ .name }}
+        {{- end }}
+    replicaScheduling:
+      replicaDivisionPreference: Weighted
+      replicaSchedulingType: Divided
+      weightPreference:
+        staticWeightList:
+          {{- range .Values.karmada.clusters }}
+          - targetCluster:
+              clusterNames:
+                - {{ .name }}
+            weight: {{ .weight }}
+          {{- end }}

@@ -1,0 +1,23 @@
+apiVersion: policy.karmada.io/v1alpha1
+kind: OverridePolicy
+metadata:
+  name: {{ include "argocon-demo.fullname" . }}
+  labels:
+    {{- include "argocon-demo.labels" . | nindent 4 }}
+spec:
+  resourceSelectors:
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Rollout
+      name: {{ include "argocon-demo.fullname" . }}
+  overrideRules:
+    {{- range .Values.karmada.overrides }}
+    - targetCluster:
+        clusterNames:
+          - {{ .clusterName }}
+      overriders:
+        plaintext:
+          - path: /spec/template/spec/containers/0/env
+            operator: add
+            value:
+              {{- toYaml .env | nindent 14 }}
+    {{- end }}
