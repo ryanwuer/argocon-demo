@@ -12,9 +12,9 @@ containerPort: 80
 
 rollout:
   steps:
-    - setWeight: 10
+    - setWeight: 20
     - pause: {}
-    - setWeight: 50
+    - setWeight: 60
     - pause: {}
     - setWeight: 100
 
